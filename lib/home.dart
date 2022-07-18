@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fooderlich/screens/grocery_screen.dart';
+
+import 'package:fooderlich/models/models.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/explore_screen.dart';
 import 'screens/recipes_screen.dart';
@@ -11,51 +15,42 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-
   static List<Widget> pages = <Widget>[
     ExploreScreen(),
     RecipesScreen(),
-    // TODO 1: Replace with grocery screen
-    Container(color: Colors.blue),
+    GroceryScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void _onItemTapped(TabManager tabManager, int index) {
+    tabManager.goToTab(index);
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO 9: Wrap inside a Consumer Widget
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Fooderlich',
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ),
-      body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Theme.of(context).textSelectionTheme.selectionColor,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
+    return Consumer<TabManager>(
+      builder: (context, tabManager, _) {
+        return Scaffold(
+          body: pages[tabManager.selectedTab],
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.explore),
+                label: 'Explore',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: 'Recipes',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_basket),
+                label: 'Grocery List',
+              ),
+            ],
+            currentIndex: tabManager.selectedTab,
+            onTap: (index) => _onItemTapped(tabManager, index),
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Recipes',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'To Buy',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

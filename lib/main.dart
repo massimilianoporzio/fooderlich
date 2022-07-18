@@ -2,8 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'fooderlich_theme.dart';
 import 'home.dart';
+import 'models/tab_manager.dart';
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
@@ -29,8 +32,9 @@ class Fooderlich extends StatelessWidget {
       scrollBehavior: MyCustomScrollBehavior(),
       theme: theme,
       title: 'Fooderlich',
-      // TODO 8: Replace this with MultiProvider
-      home: const Home(),
+      home: MultiProvider(providers: [
+        ChangeNotifierProvider(create: (context) => TabManager()),
+      ], child: const Home()),
     );
   }
 }
