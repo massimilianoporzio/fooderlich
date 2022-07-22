@@ -50,15 +50,15 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
         elevation: 0.0,
         title: Text(
           'Grocery Item',
-          style: GoogleFonts.lato(fontWeight: FontWeight.w600),
+          style: GoogleFonts.adamina(fontWeight: FontWeight.w600),
         ),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // TODO 13: Add name TextField
-            // TODO 14: Add Importance selection
+            buildNameField(),
+            buildImportanceField(),
             // TODO 15: Add date picker
             // TODO 16: Add time picker
             // TODO 17: Add color picker
@@ -70,10 +70,8 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
     );
   }
 
-  // TODO: Add initState()
   @override
   void initState() {
-    // TODO: implement initState
     //STATOini INIZIALE: SE originalItem non è null mostro i suo valori
     final originalItem = widget.oringinalItem;
     if (originalItem != null) {
@@ -94,16 +92,100 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
     super.initState();
   }
 
-  // TODO: Add dispose()
   @override
   void dispose() {
-    // TODO: implement dispose
     _nameController.dispose();
     super.dispose();
   }
 
-  // TODO: Add buildNameField()
+  Widget buildNameField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Item Name',
+          style: GoogleFonts.lato(fontSize: 28.0),
+        ),
+        TextField(
+          controller: _nameController,
+          cursorColor: _currentColor,
+          decoration: InputDecoration(
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: _currentColor),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: _currentColor),
+            ),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            hintText: 'E.g. Apples, Bananas, 1 Bag of salt',
+          ),
+        ),
+      ],
+    );
+  }
+
   // TODO: Add buildImportanceField()
+  Widget buildImportanceField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0, top: 12.0),
+          child: Text(
+            'Importance',
+            style: GoogleFonts.lato(fontSize: 28.0),
+          ),
+        ),
+        Wrap(
+          spacing: 10.0,
+          runSpacing: 10.0,
+          children: [
+            ChoiceChip(
+              selectedColor: Colors.black,
+              label: const Text(
+                'Low',
+                style: TextStyle(color: Colors.white),
+              ),
+              selected: _importance == Importance.low,
+              onSelected: (selected) {
+                setState(() {
+                  _importance = selected ? Importance.low : Importance.low;
+                });
+              },
+            ),
+            ChoiceChip(
+              selectedColor: Colors.black,
+              label: const Text(
+                'Medium',
+                style: TextStyle(color: Colors.white),
+              ),
+              onSelected: (selected) {
+                setState(() {
+                  _importance = selected ? Importance.medium : Importance.low;
+                });
+              },
+              selected: _importance == Importance.medium,
+            ),
+            ChoiceChip(
+              selectedColor: Colors.black,
+              label: const Text(
+                'High',
+                style: TextStyle(color: Colors.white),
+              ),
+              onSelected: (selected) {
+                setState(() {
+                  _importance = selected ? Importance.high : Importance.low;
+                });
+              },
+              selected: _importance == Importance.high,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
   // TODO: ADD buildDateField()
   // TODO: Add buildTimeField()
   // TODO: Add buildColorPicker()
