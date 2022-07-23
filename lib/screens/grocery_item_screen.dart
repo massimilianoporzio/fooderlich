@@ -38,13 +38,30 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO 12: Add GroceryItemScreen Scaffold
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
               onPressed: () {
-                //TODO 24 add callback
+                final groceryItem = GroceryItem(
+                  id: widget.oringinalItem?.id ?? Uuid().v1(),
+                  name: _nameController.text,
+                  color: _currentColor,
+                  importance: _importance,
+                  date: DateTime(
+                    _dueDate.year,
+                    _dueDate.month,
+                    _dueDate.day,
+                    _timeOfDay.hour,
+                    _timeOfDay.minute,
+                  ),
+                  quantity: _currentSliderValue,
+                );
+                if (widget.isUpdating) {
+                  widget.onUpdate(groceryItem);
+                } else {
+                  widget.onCreate(groceryItem);
+                }
               },
               icon: Icon(Icons.check))
         ],
