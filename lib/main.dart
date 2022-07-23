@@ -33,7 +33,7 @@ class Fooderlich extends StatelessWidget {
     return MaterialApp(
       locale: const Locale('it', 'IT'),
       localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: [
