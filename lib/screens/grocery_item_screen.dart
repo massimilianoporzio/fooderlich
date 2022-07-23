@@ -59,9 +59,10 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
           children: [
             buildNameField(),
             buildImportanceField(),
-            // TODO 15: Add date picker
-            // TODO 16: Add time picker
-            // TODO 17: Add color picker
+            buildDateField(context),
+            buildTimeField(context),
+            const SizedBox(height: 10.0),
+            buildColorPicker(context),
             // TODO 18: Add slider
             // TODO: 19: Add Grocery Tile
           ],
@@ -126,69 +127,206 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
     );
   }
 
-  // TODO: Add buildImportanceField()
   Widget buildImportanceField() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0, top: 12.0),
+            child: Text(
+              'Importance',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
+          ),
+          Wrap(
+            spacing: 10.0,
+            runSpacing: 30.0,
+            children: [
+              ChoiceChip(
+                selectedColor: Colors.black,
+                label: const Text(
+                  'Low',
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _importance == Importance.low,
+                onSelected: (selected) {
+                  setState(() {
+                    _importance = selected ? Importance.low : Importance.low;
+                  });
+                },
+              ),
+              ChoiceChip(
+                selectedColor: Colors.black,
+                label: const Text(
+                  'Medium',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onSelected: (selected) {
+                  setState(() {
+                    _importance = selected ? Importance.medium : Importance.low;
+                  });
+                },
+                selected: _importance == Importance.medium,
+              ),
+              ChoiceChip(
+                selectedColor: Colors.black,
+                label: const Text(
+                  'High',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onSelected: (selected) {
+                  setState(() {
+                    _importance = selected ? Importance.high : Importance.low;
+                  });
+                },
+                selected: _importance == Importance.high,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDateField(BuildContext context) {
+// 1
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0, top: 12.0),
-          child: Text(
-            'Importance',
-            style: GoogleFonts.lato(fontSize: 28.0),
-          ),
-        ),
-        Wrap(
-          spacing: 10.0,
-          runSpacing: 10.0,
+// 2
+        Row(
+// 3
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ChoiceChip(
-              selectedColor: Colors.black,
-              label: const Text(
-                'Low',
-                style: TextStyle(color: Colors.white),
-              ),
-              selected: _importance == Importance.low,
-              onSelected: (selected) {
-                setState(() {
-                  _importance = selected ? Importance.low : Importance.low;
-                });
-              },
+// 4
+            Text(
+              'Date',
+              style: GoogleFonts.lato(fontSize: 28.0),
             ),
-            ChoiceChip(
-              selectedColor: Colors.black,
-              label: const Text(
-                'Medium',
-                style: TextStyle(color: Colors.white),
-              ),
-              onSelected: (selected) {
+// 5
+            TextButton(
+              child: const Text('Select'),
+// 6
+              onPressed: () async {
+                final currentDate = DateTime.now();
+// 7
+                final selectedDate = await showDatePicker(
+                  locale: const Locale('it', 'IT'),
+                  context: context,
+                  initialDate: currentDate,
+                  firstDate: currentDate,
+                  lastDate: DateTime(currentDate.year + 5),
+                );
+// 8
                 setState(() {
-                  _importance = selected ? Importance.medium : Importance.low;
+                  if (selectedDate != null) {
+                    _dueDate = selectedDate;
+                  }
                 });
               },
-              selected: _importance == Importance.medium,
-            ),
-            ChoiceChip(
-              selectedColor: Colors.black,
-              label: const Text(
-                'High',
-                style: TextStyle(color: Colors.white),
-              ),
-              onSelected: (selected) {
-                setState(() {
-                  _importance = selected ? Importance.high : Importance.low;
-                });
-              },
-              selected: _importance == Importance.high,
             ),
           ],
+        ),
+// 9
+        Text('${DateFormat('dd/MM/yyyy').format(_dueDate)}'),
+      ],
+    );
+  }
+
+  Widget buildTimeField(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Time of Day',
+                style: GoogleFonts.lato(fontSize: 28.0),
+              ),
+              TextButton(
+                child: const Text('Select'),
+                onPressed: () async {
+// 1
+                  final timeOfDay = await showTimePicker(
+// 2
+                    initialTime: TimeOfDay.now(),
+                    context: context,
+                  );
+// 3
+                  setState(() {
+                    if (timeOfDay != null) {
+                      _timeOfDay = timeOfDay;
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+          Text('${_timeOfDay.format(context)}'),
+        ],
+      ),
+    );
+  }
+
+  // TODO: Add buildColorPicker()
+  Widget buildColorPicker(BuildContext context) {
+// 1
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+// 2
+        Row(
+          children: [
+            Container(
+              height: 50.0,
+              width: 10.0,
+              color: _currentColor,
+            ),
+            const SizedBox(width: 8.0),
+            Text(
+              'Color',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
+          ],
+        ),
+// 3
+        TextButton(
+          child: const Text('Select'),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+// 5
+                return AlertDialog(
+                  content: BlockPicker(
+                    pickerColor: Colors.white,
+// 6
+                    onColorChanged: (color) {
+                      setState(() => _currentColor = color);
+                    },
+                  ),
+                  actions: [
+// 7
+                    TextButton(
+                      child: const Text('Save'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ],
     );
   }
-  // TODO: ADD buildDateField()
-  // TODO: Add buildTimeField()
-  // TODO: Add buildColorPicker()
   // TODO: Add buildQuantityField()
 
 }

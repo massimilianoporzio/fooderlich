@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fooderlich/models/models.dart';
 
 import 'package:provider/provider.dart';
@@ -30,6 +31,16 @@ class Fooderlich extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = FooderlichTheme.dark();
     return MaterialApp(
+      locale: const Locale('it', 'IT'),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'),
+        const Locale('es', 'ES'),
+        const Locale('it', 'IT'),
+      ],
       scrollBehavior: MyCustomScrollBehavior(),
       theme: theme,
       title: 'Fooderlich',
